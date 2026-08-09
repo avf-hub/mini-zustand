@@ -1,7 +1,11 @@
 import './App.css'
+import { useCounterStore } from './model/counterStore';
 
 function App() {
-  return <div className="wrapper"></div>;
+  const {counter} = useCounterStore();
+  return <div className="wrapper">
+    <span>{counter}</span>
+  </div>
 }
 
 export default App
