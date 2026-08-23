@@ -1,12 +1,14 @@
 import './App.css'
 import { useCounterStore } from './model/counterStore';
+import {addTen} from "./helpers/addTen.ts";
 
 function App() {
   const {counter, increment, decrement} = useCounterStore();
   return <div className="wrapper">
-    <button onClick={decrement}>-</button>
-    <span>{counter}</span>
     <button onClick={increment}>+</button>
+    <span>{counter}</span>
+    <button onClick={decrement}>-</button>
+    <button onClick={addTen}>add 10</button>
   </div>
 }
 
