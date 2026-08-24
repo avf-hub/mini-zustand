@@ -1,4 +1,5 @@
 import {create, type StateCreator} from "zustand";
+import {devtools} from 'zustand/middleware';
 
 export type TodoType = {
     title: string;
@@ -14,11 +15,11 @@ type TodoActions = {
     changeIsCompleted: (index: number) => void;
 };
 
-const todoSlice: StateCreator<TodoState & TodoActions> = (set, get) => ({
+const todoSlice: StateCreator<TodoState & TodoActions, [['zustand/devtools', never]]> = (set, get) => ({
     todos: [],
     addTodo: (value: string) => {
         const {todos} = get();
-        set({todos: [...todos, {title: value, isCompleted: false}]});
+        set({todos: [...todos, {title: value, isCompleted: false}]}, false, `addTodo ${value}`);
     },
     changeIsCompleted: (index: number) => {
         const {todos} = get();
@@ -27,8 +28,8 @@ const todoSlice: StateCreator<TodoState & TodoActions> = (set, get) => ({
             {...todos[index], isCompleted: !todos[index].isCompleted},
             ...todos.slice(index + 1)
         ];
-        set({todos: newTodos});
+        set({todos: newTodos}, false, `changeIsCompleted ${todos[index].title} to ${newTodos[index].isCompleted}`);
     }
 });
 
-export const useTodoStore = create<TodoState & TodoActions>(todoSlice);
+export const useTodoStore = create<TodoState & TodoActions>()(devtools(todoSlice));
