@@ -4,6 +4,8 @@ import {ShoppingCartOutlined} from '@ant-design/icons';
 import {useCoffeeStore} from "./model/coffeeStore.ts";
 import {useEffect, useState} from "react";
 import {useCounterStore} from "./model/counterStore.ts";
+import {useTodoStore} from "./model/todoStore.ts";
+import {resetAllStore} from "./helpers/create.ts";
 
 function App() {
     // const {getCoffeeList, coffeeList} = useCoffeeStore();
@@ -19,6 +21,7 @@ function App() {
     // }, [getCoffeeList]);
 
     const {counter, persistedCounter, increment, decrement} = useCounterStore();
+    const {addTodo, todos} = useTodoStore();
 
     return (
         <div className="wrapper">
@@ -26,6 +29,13 @@ function App() {
             <span>{counter}</span>
             <span>{persistedCounter}</span>
             <button onClick={increment}>+</button>
+            <button onClick={resetAllStore}>reset</button>
+            <button onClick={() => {
+                addTodo("some")
+            }}>add Todo</button>
+            {todos && todos.map((todo, index) =>
+                <span key={index}>{todo.title}</span>
+            )}
 
             {/*<Input
                 placeholder="поиск"
