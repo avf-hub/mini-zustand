@@ -3,23 +3,31 @@ import {Button, Card, Input, Rate, Tag} from "antd";
 import {ShoppingCartOutlined} from '@ant-design/icons';
 import {useCoffeeStore} from "./model/coffeeStore.ts";
 import {useEffect, useState} from "react";
+import {useCounterStore} from "./model/counterStore.ts";
 
 function App() {
-    const {getCoffeeList, coffeeList} = useCoffeeStore();
-    const [text, setText] = useState<string | undefined>();
+    // const {getCoffeeList, coffeeList} = useCoffeeStore();
+    // const [text, setText] = useState<string | undefined>();
+    //
+    // const handleSearch = (text: string) => {
+    //     getCoffeeList({text});
+    //     setText(text);
+    // }
+    //
+    // useEffect(() => {
+    //     getCoffeeList();
+    // }, [getCoffeeList]);
 
-    const handleSearch = (text: string) => {
-        getCoffeeList({text});
-        setText(text);
-    }
-
-    useEffect(() => {
-        getCoffeeList();
-    }, [getCoffeeList]);
+    const {counter, persistedCounter, increment, decrement} = useCounterStore();
 
     return (
         <div className="wrapper">
-            <Input
+            <button onClick={decrement}>-</button>
+            <span>{counter}</span>
+            <span>{persistedCounter}</span>
+            <button onClick={increment}>+</button>
+
+            {/*<Input
                 placeholder="поиск"
                 onChange={(event) => handleSearch(event.target.value)}
                 value={text}/>
@@ -33,7 +41,7 @@ function App() {
                         <Tag color="purple" style={{marginTop: 12}}>{coffee.type}</Tag>
                         <Rate defaultValue={coffee.rating} disabled allowHalf/>
                     </Card>)}
-            </div>
+            </div>*/}
         </div>
     );
 }

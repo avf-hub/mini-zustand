@@ -1,21 +1,23 @@
 import {create, type StateCreator} from "zustand";
+import {persist} from "zustand/middleware";
 
-type CounterState = { counter: number };
+type CounterState = { counter: number, persistedCounter: number };
 type CounterActions = {
     increment: () => void;
     decrement: () => void;
     changeByAmound: (value: number) => void;
 };
 
-const counterSlice: StateCreator<CounterState & CounterActions> = (set, get) => ({
+const counterSlice: StateCreator<CounterState & CounterActions, [["zustand/persist", unknown]]> = (set, get) => ({
     counter: 0,
+    persistedCounter: 0,
     increment: () => {
-        const {counter} = get();
-        set({counter: counter + 1});
+        const {counter, persistedCounter} = get();
+        set({counter: counter + 1, persistedCounter: persistedCounter + 1});
     },
     decrement: () => {
-        const {counter} = get();
-        set({counter: counter - 1});
+        const {counter, persistedCounter} = get();
+        set({counter: counter - 1, persistedCounter: persistedCounter - 1});
     },
     changeByAmound: (value: number) => {
         const {counter} = get();
@@ -23,7 +25,12 @@ const counterSlice: StateCreator<CounterState & CounterActions> = (set, get) => 
     }
 });
 
-export const useCounterStore = create<CounterState & CounterActions>(counterSlice);
+export const useCounterStore = create<CounterState & CounterActions>()(
+    persist(counterSlice, {
+        name: "counterStore",
+        partialize: (state) => ({persistedCounter: state.persistedCounter})
+    })
+);
 
 export const changeByAmound = (value: number) => useCounterStore.getState().changeByAmound(value);
 export const getCounter = () => useCounterStore.getState().counter;
