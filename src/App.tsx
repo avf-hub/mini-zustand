@@ -3,55 +3,52 @@ import {Button, Card, Input, Rate, Tag} from "antd";
 import {ShoppingCartOutlined} from '@ant-design/icons';
 import {useCoffeeStore} from "./model/coffeeStore.ts";
 import {useEffect, useState} from "react";
-import {useCounterStore} from "./model/counterStore.ts";
-import {useTodoStore} from "./model/todoStore.ts";
-import {resetAllStore} from "./helpers/create.ts";
 
 function App() {
-    // const {getCoffeeList, coffeeList} = useCoffeeStore();
-    // const [text, setText] = useState<string | undefined>();
-    //
-    // const handleSearch = (text: string) => {
-    //     getCoffeeList({text});
-    //     setText(text);
-    // }
-    //
-    // useEffect(() => {
-    //     getCoffeeList();
-    // }, [getCoffeeList]);
+    const {getCoffeeList, coffeeList, addToCart, cart, clearCart, orderCoffee, address, setAddress} = useCoffeeStore();
+    const [text, setText] = useState<string | undefined>();
 
-    const {counter, persistedCounter, increment, decrement} = useCounterStore();
-    const {addTodo, todos} = useTodoStore();
+    const handleSearch = (text: string) => {
+        getCoffeeList({text});
+        setText(text);
+    }
+
+    useEffect(() => {
+        getCoffeeList();
+    }, [getCoffeeList]);
 
     return (
         <div className="wrapper">
-            <button onClick={decrement}>-</button>
-            <span>{counter}</span>
-            <span>{persistedCounter}</span>
-            <button onClick={increment}>+</button>
-            <button onClick={resetAllStore}>reset</button>
-            <button onClick={() => {
-                addTodo("some")
-            }}>add Todo</button>
-            {todos && todos.map((todo, index) =>
-                <span key={index}>{todo.title}</span>
-            )}
-
-            {/*<Input
+            <Input
                 placeholder="поиск"
                 onChange={(event) => handleSearch(event.target.value)}
                 value={text}/>
-            <div className="cardsContainer">
-                {coffeeList && coffeeList.map((coffee) =>
-                    <Card
-                        key={coffee.id}
-                        cover={<img src={coffee.image} alt={coffee.name}/>}
-                        actions={[<Button icon={<ShoppingCartOutlined/>}>{coffee.price}</Button>]}>
-                        <Card.Meta title={coffee.name} description={coffee.subTitle}/>
-                        <Tag color="purple" style={{marginTop: 12}}>{coffee.type}</Tag>
-                        <Rate defaultValue={coffee.rating} disabled allowHalf/>
-                    </Card>)}
-            </div>*/}
+            <div style={{display: "flex"}}>
+                <div className="cardsContainer">
+                    {coffeeList && coffeeList.map((coffee) =>
+                        <Card
+                            key={coffee.id}
+                            cover={<img src={coffee.image} alt={coffee.name}/>}
+                            actions={[<Button
+                                icon={<ShoppingCartOutlined onClick={() => addToCart(coffee)}/>}>{coffee.price}
+                            </Button>]}>
+                            <Card.Meta title={coffee.name} description={coffee.subTitle}/>
+                            <Tag color="purple" style={{marginTop: 12}}>{coffee.type}</Tag>
+                            <Rate defaultValue={coffee.rating} disabled allowHalf/>
+                        </Card>)}
+                </div>
+            </div>
+            <aside className="sider">
+                <h1>Заказ</h1>
+                {cart && cart.length > 0 ? <>
+                {cart.map((item, index) =>
+                    <span key={index}>{item.name}</span>)
+                }
+                </> : <span>Добавьте напитки</span>}
+                <Input placeholder="адрес" value={address} onChange={(event) => setAddress(event.target.value)}/>
+                <Button type="primary" onClick={orderCoffee} disabled={!address}>Сделать заказ</Button>
+                <Button onClick={clearCart}>Очистить корзину</Button>
+            </aside>
         </div>
     );
 }
