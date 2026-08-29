@@ -86,3 +86,5 @@ export const useCoffeeStore = create<CoffeeState & CoffeeActions>()(
         partialize: (state) => ({cart: state.cart, address: state.address})
     }), {name: "coffeeStore"})
 );
+
+export const getCoffeeList = (params: GetCoffeeListReqParams) => useCoffeeStore.getState().getCoffeeList(params);

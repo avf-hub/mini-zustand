@@ -2,16 +2,12 @@ import './App.css';
 import {Button, Card, Input, Rate, Tag} from "antd";
 import {ShoppingCartOutlined} from '@ant-design/icons';
 import {useCoffeeStore} from "./model/coffeeStore.ts";
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
+import {useSearchStore} from "./model/SearchStore.ts";
 
 function App() {
     const {getCoffeeList, coffeeList, addToCart, cart, clearCart, orderCoffee, address, setAddress} = useCoffeeStore();
-    const [text, setText] = useState<string | undefined>();
-
-    const handleSearch = (text: string) => {
-        getCoffeeList({text});
-        setText(text);
-    }
+    const {text, setText} = useSearchStore();
 
     useEffect(() => {
         getCoffeeList();
@@ -21,7 +17,7 @@ function App() {
         <div className="wrapper">
             <Input
                 placeholder="поиск"
-                onChange={(event) => handleSearch(event.target.value)}
+                onChange={(event) => setText(event.target.value)}
                 value={text}/>
             <div style={{display: "flex"}}>
                 <div className="cardsContainer">
@@ -41,9 +37,9 @@ function App() {
             <aside className="sider">
                 <h1>Заказ</h1>
                 {cart && cart.length > 0 ? <>
-                {cart.map((item, index) =>
-                    <span key={index}>{item.name}</span>)
-                }
+                    {cart.map((item, index) =>
+                        <span key={index}>{item.name}</span>)
+                    }
                 </> : <span>Добавьте напитки</span>}
                 <Input placeholder="адрес" value={address} onChange={(event) => setAddress(event.target.value)}/>
                 <Button type="primary" onClick={orderCoffee} disabled={!address}>Сделать заказ</Button>
