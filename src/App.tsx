@@ -10,8 +10,8 @@ function App() {
     const {text, setText} = useSearchStore();
 
     useEffect(() => {
-        getCoffeeList();
-    }, [getCoffeeList]);
+        getCoffeeList({text});
+    }, [getCoffeeList, text]);
 
     return (
         <div className="wrapper">
