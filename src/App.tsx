@@ -3,22 +3,24 @@ import {Button, Card, Input, Rate, Tag} from "antd";
 import {ShoppingCartOutlined} from '@ant-design/icons';
 import {useCoffeeStore} from "./model/coffeeStore.ts";
 import {useEffect} from "react";
-import {useSearchStore} from "./model/SearchStore.ts";
+import {useUrlStorage} from "./helpers/useUrlStorage.ts";
 
 function App() {
-    const {getCoffeeList, coffeeList, addToCart, cart, clearCart, orderCoffee, address, setAddress} = useCoffeeStore();
-    const {text, setText} = useSearchStore();
+    const {getCoffeeList, coffeeList, addToCart, cart, clearCart, orderCoffee, address, setAddress, params, setParams} = useCoffeeStore();
+    // const {text, setText} = useSearchStore();
 
     useEffect(() => {
-        getCoffeeList({text});
-    }, [getCoffeeList, text]);
+        getCoffeeList(params);
+    }, []);
+
+    useUrlStorage(params, setParams);
 
     return (
         <div className="wrapper">
             <Input
                 placeholder="поиск"
-                onChange={(event) => setText(event.target.value)}
-                value={text}/>
+                onChange={(event) => setParams({text: event.target.value})}
+                value={params.text}/>
             <div style={{display: "flex"}}>
                 <div className="cardsContainer">
                     {coffeeList && coffeeList.map((coffee) =>
