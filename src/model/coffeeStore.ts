@@ -1,6 +1,6 @@
 import {create} from "zustand";
 import {devtools, persist} from "zustand/middleware";
-import type {GetCoffeeListReqParams} from "../types/coffeetypes.ts";
+import type {CoffeeType, GetCoffeeListReqParams} from "../types/coffeetypes.ts";
 import type {CartActions, CartState, ListActions, ListState} from "../types/storetypes.ts";
 import {listSlice} from "./listSlice.ts";
 import {cartSlice} from "./cartSlice.ts";
@@ -13,3 +13,8 @@ export const useCoffeeStore = create<ListState & ListActions & CartState & CartA
 );
 
 export const getCoffeeList = (params: GetCoffeeListReqParams) => useCoffeeStore.getState().getCoffeeList(params);
+export const setParams = (params: GetCoffeeListReqParams) => useCoffeeStore.getState().setParams(params);
+export const setAddress = (address: string) => useCoffeeStore.getState().setAddress(address);
+export const orderCoffee = () => useCoffeeStore.getState().orderCoffee();
+export const clearCart = () => useCoffeeStore.getState().clearCart();
+export const addToCart = (item: CoffeeType) => useCoffeeStore.getState().addToCart(item);
