@@ -20,11 +20,16 @@ export const useUrlStorage = <T extends Record<string, string>>(
         }
     };
 
-    useEffect(setParamsFromUrl, [queryParams]);
+    useEffect(setParamsFromUrl, [params, queryParams, setParams]);
 
     useEffect(() => {
         const newQueryParams = new URLSearchParams();
-        params.text && newQueryParams.set("text", params.text);
+        Object.keys(params).forEach((key) => {
+            const value = params[key];
+            if (value) {
+                newQueryParams.set(key, value);
+            }
+        })
         setQueryParams(newQueryParams);
-    }, [params]);
+    }, [params, setQueryParams]);
 };
